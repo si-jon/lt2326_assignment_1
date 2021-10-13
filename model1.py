@@ -2,7 +2,11 @@ import torch
 import torch.nn as nn
 from torchvision import transforms
 from torch.nn.modules.module import Module
+from statistics import mean
 import torch.nn.functional as F
+
+# Hyperparameters
+epochs = 5
 
 # Input - bilder / tre dimensionell array
 # Output - Koordinater till bounding box
@@ -16,12 +20,12 @@ import torch.nn.functional as F
 
 class charDetectionCNN(nn.Module):
 
-    def __init__(self, height=2048, width=2048, in_chan=3):
+    def __init__(self, height=2048, width=2048, in_chan=3, out_chan=3):
         super(charDetectionCNN, self).__init__()
 
-        self.conv1 = nn.Conv2d(in_chan, 18, kernel_size=3)
+        self.conv1 = nn.Conv2d(in_chan, out_chan, kernel_size=3)
         self.pool = nn.MaxPool2d(kernel_size=2,)
-        self.fc1 = torch.nn.Linear(18 * 16 * 16, 64)
+        self.fc1 = torch.nn.Linear(3 * 3 * 3, 64)
         self.fc2 = torch.nn.Linear(64, 10)
 
     def forward(self, img):
